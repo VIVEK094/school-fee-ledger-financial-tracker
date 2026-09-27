@@ -1,0 +1,467 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>School Fee Ledger</title>
+
+    <link rel="stylesheet"
+          href="{% static 'finance/style.css' %}">
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">₹</div>
+
+            <div>
+                <h2>FeeLedger</h2>
+                <span>Financial Tracker</span>
+            </div>
+        </div>
+
+        <nav aria-label="Main navigation">
+            <a href="#dashboard" class="active">
+                Dashboard
+            </a>
+
+            <a href="#transactions">
+                Transactions
+            </a>
+
+            <a href="#collection">
+                Collect Fee
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <span>School Finance System</span>
+            <small>Django + SQLite</small>
+        </div>
+
+    </aside>
+
+
+    <!-- Main -->
+    <main class="main">
+
+        <!-- Header -->
+        <header class="topbar" id="dashboard">
+
+            <div>
+                <p class="eyebrow">FINANCE MANAGEMENT</p>
+
+                <h1>
+                    School Fee Ledger
+                </h1>
+
+                <p class="subtitle">
+                    Monitor student payments and financial activity.
+                </p>
+            </div>
+
+            <div class="status">
+                <span class="status-dot"></span>
+                System Online
+            </div>
+
+        </header>
+
+
+        <!-- Dashboard Cards -->
+        <section class="dashboard-grid">
+            <div class="stat-card">
+                <div class="stat-icon collected">₹</div>
+                <div><span>Total Collected</span><h2 id="totalCollected">₹0</h2></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon transactions">₹</div>
+                <div><span>Outstanding Arrears</span><h2 id="totalOutstanding">₹0</h2></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon recent">!</div>
+                <div><span>Unverified Payments</span><h2 id="unverifiedCount">0</h2></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon transactions">#</div>
+                <div><span>Total Transactions</span><h2 id="totalTransactions">0</h2></div>
+            </div>
+        </section>
+
+        <section class="content-grid">
+
+
+            <!-- Collection Form -->
+            <div class="panel" id="collection">
+
+                <div class="panel-header">
+
+                    <div>
+                        <p class="section-label">
+                            PAYMENT ENTRY
+                        </p>
+
+                        <h2>
+                            Record Fee Collection
+                        </h2>
+                    </div>
+
+                    <span class="secure">
+                        ● Secure
+                    </span>
+
+                </div>
+
+
+                <form id="feeForm">
+
+                    <div class="form-group">
+
+                        <label for="studentRegNumber">
+                            Student Registration Number
+                        </label>
+
+                        <input
+                            type="text"
+                            id="studentRegNumber"
+                            name="student_reg_number"
+                            autocomplete="off"
+                            maxlength="50"
+                            placeholder="e.g. SIT2024001"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+
+                            <label for="amountPaid">
+                                Amount Paid
+                            </label>
+
+                            <div class="amount-input">
+
+                                <span>₹</span>
+
+                                <input
+                                    type="number"
+                                    id="amountPaid"
+                                    name="amount_paid"
+                                    placeholder="0"
+                                    min="1"
+                                    step="1"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="paymentMode">
+                                Payment Mode
+                            </label>
+
+                            <select
+                                id="paymentMode"
+                                name="payment_mode"
+                                required
+                            >
+
+                                <option value="">
+                                    Select mode
+                                </option>
+
+                                <option value="Cash">
+                                    Cash
+                                </option>
+
+                                <option value="UPI">
+                                    UPI
+                                </option>
+
+                                <option value="Card">
+                                    Card
+                                </option>
+
+                                <option value="Bank Transfer">
+                                    Bank Transfer
+                                </option>
+                            </select>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="expectedFee">Expected Term Fee</label>
+                            <div class="amount-input">
+                                <span>₹</span>
+                                <input type="number" id="expectedFee" name="expected_fee" placeholder="Not set" min="1" step="1">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="academicTerm">Academic Term</label>
+
+                            <select id="academicTerm" name="academic_term" required>
+
+                            <option value="">
+                                Select academic term
+                            </option>
+
+                            <option value="2026-27">
+                                2026-27
+                            </option>
+
+                            <option value="2025-26">
+                                2025-26
+                            </option>
+
+                            <option value="2024-25">
+                                2024-25
+                            </option>
+
+                            </select>
+                        </div>
+                    </div>
+
+                    <label class="verification-control" for="paymentVerified">
+                        <input type="checkbox" id="paymentVerified" name="is_verified">
+                        <span>Payment verified against receipt or bank record</span>
+                    </label>
+
+
+                    <button
+                        type="submit"
+                        class="submit-btn"
+                    >
+
+                        <span>
+                            Record Payment
+                        </span>
+
+                        <span>→</span>
+
+                    </button>
+
+                    <div id="formMessage" class="form-message" role="status" aria-live="polite"></div>
+
+                </form>
+
+            </div>
+
+
+            <!-- Quick Summary -->
+            <div class="panel summary-panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <p class="section-label">
+                            ACCOUNTING STATUS
+                        </p>
+
+                        <h2>
+                            Live Status
+                        </h2>
+                    </div>
+
+                </div>
+
+
+                <div class="audit-box">
+
+                    <div class="audit-icon">
+                        ✓
+                    </div>
+
+                    <div>
+                        <strong id="auditSummary">Ledger Active</strong>
+                        <p id="auditDescription">All recorded payments are stored securely in the local database.</p>
+                    </div>
+                </div>
+
+
+                <div class="status-row">
+
+                    <span>
+                        Database
+                    </span>
+
+                    <strong>
+                        SQLite
+                    </strong>
+
+                </div>
+
+
+                <div class="status-row">
+
+                    <span>
+                        API
+                    </span>
+
+                    <strong class="green" id="apiStatus" role="status">
+                        Checking
+                    </strong>
+
+                </div>
+
+
+                <div class="status-row">
+
+                    <span>
+                        Last Sync
+                    </span>
+
+                    <strong id="lastSync">
+                        --
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Transaction History -->
+        <section
+            class="panel transactions-panel"
+            id="transactions"
+        >
+
+            <div class="panel-header">
+
+                <div>
+
+                    <p class="section-label">LATEST ENTRIES</p>
+                    <h2>Latest 10 Transactions</h2>
+                </div>
+                <div class="table-actions">
+                    <button class="refresh-btn" id="refreshButton" type="button" title="Refresh transaction history">
+                        <span aria-hidden="true">↻</span> Refresh
+                    </button>
+                    <button class="export-btn" id="exportButton" type="button" title="Export filtered transactions as CSV">
+                        <span aria-hidden="true">↓</span> Export CSV
+                    </button>
+                </div>
+
+            </div>
+
+
+            <div class="table-filters" role="search" aria-label="Filter transactions">
+                <label class="search-control">
+                    <span class="visually-hidden">Search transactions</span>
+                    <span aria-hidden="true">⌕</span>
+                    <input id="transactionSearch" type="search" placeholder="Search student or transaction" autocomplete="off">
+                </label>
+                <label>
+                    <span class="visually-hidden">Filter by payment mode</span>
+                    <select id="modeFilter" aria-label="Filter by payment mode">
+                        <option value="">All payment modes</option>
+                        <option value="Cash">Cash</option>
+                        <option value="UPI">UPI</option>
+                        <option value="Card">Card</option>
+                        <option value="Bank Transfer">Bank Transfer</option>
+                    </select>
+                </label>
+                <label>
+                    <span class="visually-hidden">Filter by academic term</span>
+                    <select id="termFilter" aria-label="Filter by academic term">
+                        <option value="">All academic terms</option>
+                    </select>
+                </label>
+            </div>
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                    <tr>
+
+                        <th>
+                            Transaction
+                        </th>
+
+                        <th>
+                            Registration No.
+                        </th>
+
+                        <th>Amount Paid</th>
+
+                        <th>Expected Fee</th>
+
+                        <th>Outstanding</th>
+
+                        <th>Payment Mode</th>
+
+                        <th>
+                            Academic Term
+                        </th>
+
+                        <th>Date &amp; Time</th>
+
+                        <th>Audit Status</th>
+
+                    </tr>
+
+                    </thead>
+
+
+                    <tbody id="transactionTable">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <div id="emptyState" class="empty-state" hidden>No transactions recorded yet.</div>
+            <div id="tableSummary" class="table-summary" aria-live="polite"></div>
+
+        </section>
+
+
+        <footer>
+
+            <span>
+                School Fee Ledger & Financial Tracker
+            </span>
+
+            <span>
+                Built with Django • SQLite • Vanilla JavaScript
+            </span>
+
+        </footer>
+
+    </main>
+
+</div>
+
+
+<script src="{% static 'finance/app.js' %}"></script>
+
+</body>
+</html>
